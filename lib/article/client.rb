@@ -6,6 +6,7 @@ require "logger"
 module Article
   class Client
     class ConnectionError < Article::Error; end
+
     class AuthenticationError < Article::Error; end
 
     def initialize(server, port, username, password, use_ssl: true)
@@ -14,7 +15,7 @@ module Article
       @username = username
       @password = password
       @use_ssl = use_ssl
-      @logger = Logger.new(STDOUT)
+      @logger = Logger.new($stdout)
     end
 
     def connect
@@ -42,7 +43,7 @@ module Article
       @logger.error "Failed to connect to #{@server}:#{@port}: #{e.message}"
       raise ConnectionError, "Failed to connect to #{@server}:#{@port}: #{e.message}"
     ensure
-      @socket.close if @socket
+      @socket&.close
     end
 
     def list
@@ -52,7 +53,7 @@ module Article
       @logger.info "Received #{response.size} groups"
       response.map do |line|
         name, last, first, flag = line.split(" ")
-        { name: name, last: last.to_i, first: first.to_i, flag: flag }
+        {name: name, last: last.to_i, first: first.to_i, flag: flag}
       end
     end
 
