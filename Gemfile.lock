@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    article (0.1.0)
+    article (0.0.1)
 
 GEM
   remote: https://rubygems.org/
